@@ -1,6 +1,6 @@
 from src.parser import load_jssp_instance
 from src.decoder import decode_schedule
-
+from src.operators import create_random_chromosome
 
 number_of_jobs, number_of_machines, jobs = load_jssp_instance(
     "data/la01.txt"
@@ -10,14 +10,9 @@ print(f"Jobs: {number_of_jobs}")
 print(f"Machines: {number_of_machines}")
 
 
-# Create a simple valid chromosome.
+# Create a random valid chromosome.
 # Each job appears once for every operation it has.
-chromosome = []
-
-for operation_id in range(number_of_machines):
-    for job_id in range(number_of_jobs):
-        chromosome.append(job_id)
-
+chromosome = create_random_chromosome(jobs)
 
 schedule, makespan = decode_schedule(
     jobs,
