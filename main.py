@@ -1,6 +1,7 @@
 from src.parser import load_jssp_instance
 from src.decoder import decode_schedule
 from src.ga import run_genetic_algorithm
+from src.visualization import plot_gantt
 
 
 # Load JSSP instance.
@@ -12,9 +13,9 @@ print(f"Jobs: {number_of_jobs}")
 print(f"Machines: {number_of_machines}")
 
 
-# Temporary GA parameters for testing.
+# GA parameters.
 population_size = 50
-generations = 100
+generations = 200
 crossover_probability = 0.8
 mutation_probability = 0.1
 
@@ -39,6 +40,14 @@ best_chromosome, best_makespan, best_history = (
 )
 
 
+# Decode the best chromosome.
+best_schedule, _ = decode_schedule(
+    jobs,
+    best_chromosome,
+    number_of_machines
+)
+
+
 print("\nResults:")
 print(f"Initial best Cmax: {best_history[0]}")
 print(f"Final best Cmax: {best_makespan}")
@@ -49,21 +58,13 @@ print(
 )
 
 
-# Decode the best chromosome into a schedule.
-best_schedule, _ = decode_schedule(
-    jobs,
-    best_chromosome,
-    number_of_machines
-)
-
-
 print("\nBest chromosome:")
 print(best_chromosome)
 
 
-print("\nFirst 10 operations of best schedule:")
+print("\nBest schedule:")
 
-for operation in best_schedule[:10]:
+for operation in best_schedule:
     print(
         f"Job {operation['job']} "
         f"Operation {operation['operation']} "
@@ -73,10 +74,9 @@ for operation in best_schedule[:10]:
     )
 
 
-print("\nBest Cmax history:")
-
-for generation, makespan in enumerate(best_history):
-    print(
-        f"Generation {generation}: "
-        f"Cmax = {makespan}"
-    )
+# Display Gantt chart.
+plot_gantt(
+    best_schedule,
+    number_of_machines,
+    title=f"la01 - Best Schedule - Cmax {best_makespan}"
+)
